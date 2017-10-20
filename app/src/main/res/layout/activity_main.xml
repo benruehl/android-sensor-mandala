@@ -12,44 +12,53 @@
         android:id="@+id/txtXValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginTop="20dp"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/txtYValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/txtZValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
         android:text="TextView" />
 
     <ProgressBar
         android:id="@+id/progressX"
         style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:max="50" />
+
+    <TextView
+        android:id="@+id/txtYValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="5dp"
+        android:text="TextView" />
 
     <ProgressBar
         android:id="@+id/progressY"
         style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:max="50" />
+
+    <TextView
+        android:id="@+id/txtZValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="5dp"
+        android:text="TextView" />
 
     <ProgressBar
         android:id="@+id/progressZ"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp" />
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:max="50" />
 
     <Button
         android:id="@+id/button"
