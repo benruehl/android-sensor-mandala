@@ -7,11 +7,14 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import java.io.File
+import java.io.PrintWriter
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
@@ -30,6 +33,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     var running = true
 
+    var exportFile : File? = null
+
     override fun onSensorChanged(p0: SensorEvent?) {
         val mySensor = p0?.sensor
 
@@ -43,11 +48,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             Log.d("value Y: ", "$y")
             Log.d("value Z: ", "$z")
             Log.d("_______________________", "")
+
+            /*exportFile?.printWriter().use { out ->
+                out?.println("$x; $y; $z;")
+            }*/
+
         }
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +86,32 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 }
             }
         })
+
+        Log.d("ExportPath", "${Environment.getExternalStorageDirectory()}")
+        exportFile = File("${Environment.getExternalStorageDirectory()}Export")
+        var success = true
+        if (exportFile != null && exportFile!!.exists()) {
+            success = exportFile!!.mkdir()
+        }
+        if (success) {
+            val sd = File("filename.txt")
+
+            if (!sd.exists()) {
+                success = sd.mkdir()
+            }
+            if (success) {
+                // directory exists or already created
+                val dest = File(sd, "export.csv")
+                try {
+                    PrintWriter(dest).use { out -> out.println("gfdfwd") }
+                } catch (e: Exception) {
+                    Log.e("ErrorException", e.message)
+                }
+
+            } else {
+                // directory creation is not successful
+            }
+        }
     }
 
 
