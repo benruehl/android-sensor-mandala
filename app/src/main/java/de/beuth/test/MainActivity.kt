@@ -1,6 +1,7 @@
 package de.beuth.test
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private val zBar: ProgressBar by bind(R.id.progressZ)
 
     private val trigger: Button by bind(R.id.button)
+    private val seismo: Button by bind(R.id.startSeismograph)
 
     private var writingPermissionsGranted = false
     private val requestCodeWriteStorage = 0
@@ -80,6 +82,12 @@ class MainActivity : AppCompatActivity() {
         } else {
             // No explanation needed, we can request the permission.
             ActivityCompat.requestPermissions(this, arrayOf(fileExporter.requiredPermission), requestCodeWriteStorage)
+        }
+
+        seismo.setOnClickListener {
+            val intent : Intent = Intent()
+            intent.setClass(this, SeismographActivity::class.java)
+            startActivity(intent)
         }
     }
 
