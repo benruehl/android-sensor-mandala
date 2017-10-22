@@ -12,7 +12,11 @@ import com.github.mikephil.charting.charts.LineChart
 /**
  * Created by User on 22.10.2017.
  */
-class SeismographActivity : AppCompatActivity(), SensorEventListener {
+class SeismographActivity : AppCompatActivity() {
+
+    private val sensorListener: SensorListener by lazy {
+        SensorListener(getSystemService(Context.SENSOR_SERVICE) as SensorManager, Sensor.TYPE_ACCELEROMETER)
+    }
 
     private var senSensorManager : SensorManager? = null
     private var senAccelerometer : Sensor? = null
@@ -30,39 +34,29 @@ class SeismographActivity : AppCompatActivity(), SensorEventListener {
         seismograph = Seismograph(chartX, chartY, chartZ)
         seismograph!!.initCharts()
 
-        senSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        senAccelerometer = senSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        senSensorManager?.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL)
+        sensorListener.onSensorChanged = { sensorEvent: SensorEvent -> onAccelerometerChanged(sensorEvent) }
+        sensorListener.startListening()
     }
 
-    override fun onSensorChanged(event: SensorEvent?) {
-        val mySensor = event?.sensor
-
-        if (mySensor?.getType() == Sensor.TYPE_ACCELEROMETER) {
-            val x = event.values[0]
-            val y = event.values[1]
-            val z = event.values[2]
+    private fun onAccelerometerChanged(sensorEvent: SensorEvent) {
+        if (sensorEvent.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+            val x = sensorEvent.values[0]
+            val y = sensorEvent.values[1]
+            val z = sensorEvent.values[2]
 
             seismograph?.addData(x,y,z)
-
-            println(seismograph?.getDataX())
-            println(seismograph?.getDataY())
-            println(seismograph?.getDataZ())
         }
-    }
-
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-
     }
 
     override fun onPause() {
         super.onPause()
-        senSensorManager?.unregisterListener(this)
+        if (sensorListener.isListening)
+            sensorListener.stopListening()
     }
 
     override fun onResume() {
         super.onResume()
-        senSensorManager?.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorListener.startListening()
     }
 
 }

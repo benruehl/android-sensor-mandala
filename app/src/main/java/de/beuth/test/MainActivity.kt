@@ -52,6 +52,12 @@ class MainActivity : AppCompatActivity() {
         trigger.setOnClickListener {
             isRecordingSensorData = !isRecordingSensorData
         }
+
+        seismo.setOnClickListener {
+            val intent : Intent = Intent()
+            intent.setClass(this, SeismographActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun onAccelerometerChanged(sensorEvent: SensorEvent) {
@@ -82,12 +88,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             // No explanation needed, we can request the permission.
             ActivityCompat.requestPermissions(this, arrayOf(fileExporter.requiredPermission), requestCodeWriteStorage)
-        }
-
-        seismo.setOnClickListener {
-            val intent : Intent = Intent()
-            intent.setClass(this, SeismographActivity::class.java)
-            startActivity(intent)
         }
     }
 
