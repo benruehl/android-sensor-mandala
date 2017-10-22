@@ -14,8 +14,6 @@ import java.io.OutputStreamWriter
  */
 class FileExporter(private val pathName: String, private val fileName: String) {
 
-    private val requestCodeWriteStorage = 0
-
     private val exportFile: File by lazy { File(pathName, fileName) }
 
     val requiredPermission: String = Manifest.permission.WRITE_EXTERNAL_STORAGE

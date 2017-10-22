@@ -1,6 +1,7 @@
 package de.beuth.test
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private val zBar: ProgressBar by bind(R.id.progressZ)
 
     private val trigger: Button by bind(R.id.button)
+    private val seismo: Button by bind(R.id.startSeismograph)
 
     private var running = false
     private var accessGranted = false
@@ -46,14 +48,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             val x = sensorEvent.values[0]
             val y = sensorEvent.values[1]
             val z = sensorEvent.values[2]
-
-            /*
-            Log.d("_______________________", "")
-            Log.d("value X: ", "$x")
-            Log.d("value Y: ", "$y")
-            Log.d("value Z: ", "$z")
-            Log.d("_______________________", "")
-            */
 
             xValue.text = "$x"
             yValue.text = "$y"
@@ -96,6 +90,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         trigger.setOnClickListener {
             running = !running
+        }
+
+        seismo.setOnClickListener {
+            val intent : Intent = Intent()
+            intent.setClass(this, SeismographActivity::class.java)
+            startActivity(intent)
         }
     }
 
