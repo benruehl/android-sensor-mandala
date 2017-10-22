@@ -11,6 +11,9 @@ import java.io.OutputStreamWriter
 
 /**
  * Created by Benjamin Rühl on 22.10.2017.
+ * Simplifies access to a single file with specified path on the file system.
+ * Handles creation of the file and its parent directory as well as the required output streams for writing into it.
+ * pathName should end with a slash and fileName should contain the file extension but no slash
  */
 class FileExporter(private val pathName: String, private val fileName: String) {
 
