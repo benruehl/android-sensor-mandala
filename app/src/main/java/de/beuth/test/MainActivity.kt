@@ -1,52 +1,51 @@
 package de.beuth.test
 
-import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.view.View
+import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import java.io.*
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
-    private var senSensorManager : SensorManager? = null
-    private var senAccelerometer : Sensor? = null
+    private var senSensorManager: SensorManager? = null
+    private var senAccelerometer: Sensor? = null
 
-    private var xValue : TextView? = null
-    private var yValue : TextView? = null
-    private var zValue : TextView? = null
+    private val sensorListener: SensorListener by lazy {
+        SensorListener(getSystemService(Context.SENSOR_SERVICE) as SensorManager, Sensor.TYPE_ACCELEROMETER)
+    }
 
-    private var xBar : ProgressBar? = null
-    private var yBar : ProgressBar? = null
-    private var zBar : ProgressBar? = null
+    private val fileExporter: FileExporter by lazy { FileExporter("/sdcard/BeuthExport/", "export.csv") }
 
-    var trigger : Button? = null
+    private val xValue: TextView by bind(R.id.txtXValue)
+    private val yValue: TextView by bind(R.id.txtYValue)
+    private val zValue: TextView by bind(R.id.txtZValue)
+
+    private val xBar: ProgressBar by bind(R.id.progressX)
+    private val yBar: ProgressBar by bind(R.id.progressY)
+    private val zBar: ProgressBar by bind(R.id.progressZ)
+
+    private val trigger: Button by bind(R.id.button)
 
     private var running = false
     private var accessGranted = false
 
     private val requestCodeWriteStorage = 0
-    private val filename = "export.csv"
-    private var exportDir : File? = null
-    private var exportFile : File? = null
 
-    override fun onSensorChanged(p0: SensorEvent?) {
-        val mySensor = p0?.sensor
+    override fun onSensorChanged(sensorEvent: SensorEvent) {
+        val mySensor = sensorEvent.sensor
 
-        if (mySensor?.getType() == Sensor.TYPE_ACCELEROMETER) {
-            val x = p0.values[0]
-            val y = p0.values[1]
-            val z = p0.values[2]
+        if (mySensor.type == Sensor.TYPE_ACCELEROMETER) {
+            val x = sensorEvent.values[0]
+            val y = sensorEvent.values[1]
+            val z = sensorEvent.values[2]
 
             /*
             Log.d("_______________________", "")
@@ -56,43 +55,21 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             Log.d("_______________________", "")
             */
 
-            xValue?.setText("$x")
-            yValue?.setText("$y")
-            zValue?.setText("$z")
+            xValue.text = "$x"
+            yValue.text = "$y"
+            zValue.text = "$z"
 
-            xBar?.setProgress(x.toInt())
-            yBar?.setProgress(y.toInt())
-            zBar?.setProgress(z.toInt())
+            xBar.progress = x.toInt()
+            yBar.progress = y.toInt()
+            zBar.progress = z.toInt()
 
-
-            if(accessGranted) {
-
-                try {
-
-                    if(exportDir != null && !exportDir!!.exists())
-                        exportDir?.mkdirs()
-
-                    if(exportFile != null && exportFile!!.exists()) {
-
-                        if(running) {
-                            val fos = FileOutputStream(exportFile)
-                            val fow = OutputStreamWriter(fos)
-
-                            fow.append("$x; $y; $z;\n")
-                            fow.close()
-
-                            fos.flush()
-                            fos.close()
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+            if (accessGranted && running) {
+                fileExporter.appendToFile("$x; $y; $z;${System.getProperty("line.separator")}")
             }
         }
     }
 
-    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+    override fun onAccuracyChanged(sensor: Sensor, p1: Int) {
 
     }
 
@@ -100,62 +77,37 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        accessGranted = fileExporter.checkStorageWritingPermission(this);
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (!accessGranted) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, fileExporter.requiredPermission)) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
             } else {
                 // No explanation needed, we can request the permission.
-                val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                ActivityCompat.requestPermissions(this, permissions , requestCodeWriteStorage)
+                ActivityCompat.requestPermissions(this, arrayOf(fileExporter.requiredPermission), requestCodeWriteStorage)
             }
-        } else {
-            accessGranted = true
         }
 
         senSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         senAccelerometer = senSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        senSensorManager?.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL)
+        senSensorManager?.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL)
 
-        xValue = findViewById(R.id.txtXValue)
-        yValue = findViewById(R.id.txtYValue)
-        zValue = findViewById(R.id.txtZValue)
-
-        xBar = findViewById(R.id.progressX)
-        yBar = findViewById(R.id.progressY)
-        zBar = findViewById(R.id.progressZ)
-
-        trigger = findViewById(R.id.button)
-        val onClickListener = trigger?.setOnClickListener {
-            if (running) {
-                running = false
-            } else {
-                running = true
-            }
+        trigger.setOnClickListener {
+            running = !running
         }
-
-        exportDir = File("/sdcard/BeuthExport/")
-        exportFile = File(exportDir, filename)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             0 -> {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    accessGranted = true;
-                } else {
-                    accessGranted = false;
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
+                accessGranted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
                 return
             }
         }
     }
-
 
     override fun onPause() {
         super.onPause()
