@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -74,8 +75,10 @@ class MainActivity : AppCompatActivity() {
             yBar.progress = y.toInt()
             zBar.progress = z.toInt()
 
+            val calendar : Calendar = Calendar.getInstance()
+
             if (writingPermissionsGranted && isRecordingSensorData) {
-                fileExporter.appendToFile("$x; $y; $z;${System.getProperty("line.separator")}")
+                fileExporter.appendToFile("${calendar.time.toString()}; $x; $y; $z;${System.getProperty("line.separator")}")
             }
         }
     }
