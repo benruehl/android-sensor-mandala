@@ -1,13 +1,16 @@
-package de.beuth.test
+package de.beuth.test.activities
 
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.github.mikephil.charting.charts.LineChart
+import de.beuth.test.R
+import de.beuth.test.sensors.Seismograph
+import de.beuth.test.sensors.SensorListener
+import de.beuth.test.utils.bind
 
 /**
  * Created by User on 22.10.2017.

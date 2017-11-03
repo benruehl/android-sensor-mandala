@@ -1,4 +1,4 @@
-package de.beuth.test
+package de.beuth.test.utils
 
 import android.Manifest
 import android.content.Context

@@ -1,4 +1,4 @@
-package de.beuth.test
+package de.beuth.test.sensors
 
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend

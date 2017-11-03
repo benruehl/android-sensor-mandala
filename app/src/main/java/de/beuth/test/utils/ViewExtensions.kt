@@ -1,4 +1,4 @@
-package de.beuth.test
+package de.beuth.test.utils
 
 /**
  * Created by Benjamin Rühl on 22.10.2017.

@@ -1,4 +1,4 @@
-package de.beuth.test
+package de.beuth.test.activities
 
 import android.content.Context
 import android.content.Intent
@@ -12,6 +12,10 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import de.beuth.test.R
+import de.beuth.test.sensors.SensorListener
+import de.beuth.test.utils.FileExporter
+import de.beuth.test.utils.bind
 import java.util.*
 
 class MainActivity : AppCompatActivity() {

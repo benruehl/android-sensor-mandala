@@ -1,4 +1,4 @@
-package de.beuth.test
+package de.beuth.test.sensors
 
 import android.hardware.Sensor
 import android.hardware.SensorEvent
