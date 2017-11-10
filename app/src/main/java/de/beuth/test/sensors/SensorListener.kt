@@ -20,7 +20,7 @@ class SensorListener(private val sensorManager: SensorManager, private val senso
         private set
 
     fun startListening() {
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST)
         isListening = true
     }
 
