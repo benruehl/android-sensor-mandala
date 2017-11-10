@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     private val trigger: Button by bind(R.id.button)
     private val seismo: Button by bind(R.id.startSeismograph)
+    private val mandala: Button by bind(R.id.startMandala)
 
     private var writingPermissionsGranted = false
     private val requestCodeWriteStorage = 0
@@ -61,6 +62,12 @@ class MainActivity : AppCompatActivity() {
         seismo.setOnClickListener {
             val intent : Intent = Intent()
             intent.setClass(this, SeismographActivity::class.java)
+            startActivity(intent)
+        }
+
+        mandala.setOnClickListener {
+            val intent : Intent = Intent()
+            intent.setClass(this, MandalaActivity::class.java)
             startActivity(intent)
         }
     }

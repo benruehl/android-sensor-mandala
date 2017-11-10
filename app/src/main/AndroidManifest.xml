@@ -20,6 +20,7 @@
         </activity>
 
         <activity android:name=".activities.SeismographActivity"/>
+        <activity android:name=".activities.MandalaActivity"/>
     </application>
 
 </manifest>
