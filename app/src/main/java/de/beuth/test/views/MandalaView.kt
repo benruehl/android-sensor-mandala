@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import de.beuth.test.R
@@ -18,6 +19,8 @@ class MandalaView(context: Context, attrs: AttributeSet) : ConstraintLayout(cont
 
     private val surfaceCount: Int
     private val dataPoints: MutableList<MandalaDataPoint> = ArrayList()
+    private val maxDataPointCount: Int
+    private val useMirroring = true
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_mandala, this, true)
@@ -25,6 +28,7 @@ class MandalaView(context: Context, attrs: AttributeSet) : ConstraintLayout(cont
 
         try {
             surfaceCount = a.getInteger(R.styleable.MandalaView_surfaceCount, 2)
+            maxDataPointCount = 8192 / surfaceCount
         } finally {
             a.recycle()
         }
@@ -36,17 +40,28 @@ class MandalaView(context: Context, attrs: AttributeSet) : ConstraintLayout(cont
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
+
         val mandalaCanvas: Canvas = canvas ?: Canvas()
 
         drawCenter(mandalaCanvas)
 
-        for (surfaceIndex: Int in 0 until surfaceCount) {
+        val visualPointsPerDataPoint: Int = if (useMirroring) surfaceCount * 2 else surfaceCount;
+
+        for (surfaceIndex: Int in 0 until visualPointsPerDataPoint) {
             for (dataPointIndex: Int in dataPoints.indices) {
                 if (dataPointIndex == 0)
                     continue
 
-                val lastPosition = calcDataPointPosition(dataPoints[dataPointIndex-1], surfaceIndex, mandalaCanvas.width, mandalaCanvas.height)
-                val curPosition = calcDataPointPosition(dataPoints[dataPointIndex], surfaceIndex, mandalaCanvas.width, mandalaCanvas.height)
+                var lastDataPoint = dataPoints[dataPointIndex-1]
+                var curDataPoint = dataPoints[dataPointIndex]
+
+                if (useMirroring && surfaceIndex % 2 == 1) {
+                    lastDataPoint = MandalaDataPoint(1 - lastDataPoint.relativeX, lastDataPoint.relativeY, lastDataPoint.thickness)
+                    curDataPoint = MandalaDataPoint(1 - curDataPoint.relativeX, curDataPoint.relativeY, curDataPoint.thickness)
+                }
+
+                val lastPosition = calcDataPointPosition(lastDataPoint, surfaceIndex, mandalaCanvas.width, mandalaCanvas.height)
+                val curPosition = calcDataPointPosition(curDataPoint, surfaceIndex, mandalaCanvas.width, mandalaCanvas.height)
 
                 mandalaCanvas.drawLine(lastPosition.first, lastPosition.second, curPosition.first, curPosition.second, getPaint(dataPoints[dataPointIndex]))
             }
@@ -62,26 +77,26 @@ class MandalaView(context: Context, attrs: AttributeSet) : ConstraintLayout(cont
     }
 
     private fun calcDataPointPosition(dataPoint: MandalaDataPoint, surfaceIndex: Int, viewWidth: Int, viewHeight: Int): Pair<Float, Float> {
-        if (surfaceIndex < 0 || surfaceIndex > surfaceCount - 1)
-            throw IllegalArgumentException("surfaceIndex out of bounds")
-
         val viewCenterX = viewWidth / 2
         val viewCenterY = viewHeight / 2
 
-        var positionX: Float
-        var positionY: Float
+        val maxDrawingRadius = viewWidth / 2
+        val dataPointRadius = maxDrawingRadius * dataPoint.relativeY
+        val dataPointAngle = calcDataPointAngle(dataPoint, surfaceIndex)
 
-        positionX = (viewCenterX + (viewWidth * dataPoint.relativeY) * Math.sin(calcDataPointAngle(dataPoint, surfaceIndex))).toFloat()
-        positionY = (viewCenterY - (viewWidth * dataPoint.relativeY) * Math.cos(calcDataPointAngle(dataPoint, surfaceIndex))).toFloat()
+        var positionX = (viewCenterX + dataPointRadius * Math.sin(dataPointAngle)).toFloat()
+        var positionY = (viewCenterY - dataPointRadius * Math.cos(dataPointAngle)).toFloat()
 
         return Pair<Float, Float>(positionX, positionY)
     }
 
     private fun calcDataPointAngle(dataPoint: MandalaDataPoint, surfaceIndex: Int): Double {
-        if (surfaceIndex < 0 || surfaceIndex > surfaceCount - 1)
+        val relevantSurfaceCount: Int = if (useMirroring) surfaceCount * 2 else surfaceCount;
+
+        if (surfaceIndex < 0 || surfaceIndex > relevantSurfaceCount- 1)
             throw IllegalArgumentException("surfaceIndex out of bounds")
 
-        val surfaceAngleRange = (2f * Math.PI) / surfaceCount
+        val surfaceAngleRange = (2f * Math.PI) / relevantSurfaceCount
         val result = (surfaceIndex * surfaceAngleRange) + (dataPoint.relativeX * surfaceAngleRange)
         return result
     }
@@ -97,5 +112,12 @@ class MandalaView(context: Context, attrs: AttributeSet) : ConstraintLayout(cont
 
     fun addDataPoint(mandalaDataPoint: MandalaDataPoint) {
         dataPoints.add(mandalaDataPoint)
+        ensureMaxDataPointCount()
+        invalidate()
+    }
+
+    private fun ensureMaxDataPointCount() {
+        while (dataPoints.size > maxDataPointCount)
+            dataPoints.removeAt(0)
     }
 }

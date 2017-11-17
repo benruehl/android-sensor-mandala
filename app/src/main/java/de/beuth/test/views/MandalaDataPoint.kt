@@ -19,4 +19,8 @@ class MandalaDataPoint {
         this.relativeY = relativeY
         this.thickness = thickness
     }
+
+    override fun toString(): String {
+        return "${this.javaClass.name}[$relativeX, $relativeY, $thickness]"
+    }
 }
