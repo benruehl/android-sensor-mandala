@@ -11,6 +11,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import com.github.mikephil.charting.charts.LineChart
 import de.beuth.test.R
+import de.beuth.test.common.SensorFilter
 import de.beuth.test.sensors.Seismograph
 import de.beuth.test.sensors.SensorListener
 import de.beuth.test.utils.bind
@@ -18,6 +19,7 @@ import android.widget.Toast
 import android.R.menu
 import android.widget.TextView
 import com.github.mikephil.charting.data.Entry
+import java.lang.Math.sqrt
 
 
 /**
@@ -32,6 +34,8 @@ class SeismographActivity : AppCompatActivity() {
     private var seismograph: Seismograph? = null
 
     private var calibrate : Boolean = false
+
+    private val setFilter: SensorFilter = SensorFilter.NORMAL;
 
     private val chartX : LineChart by bind(R.id._chartX)
     private val chartY : LineChart by bind(R.id._chartY)
@@ -58,9 +62,28 @@ class SeismographActivity : AppCompatActivity() {
 
     private fun onAccelerometerChanged(sensorEvent: SensorEvent) {
         if (sensorEvent.sensor.type == Sensor.TYPE_ACCELEROMETER) {
-            val x = sensorEvent.values[0]
-            val y = sensorEvent.values[1]
-            val z = sensorEvent.values[2]
+
+            var x = sensorEvent.values[0]
+            var y = sensorEvent.values[1]
+            var z = sensorEvent.values[2]
+
+            var result : FloatArray = kotlin.FloatArray(3)
+
+            if(setFilter != SensorFilter.NORMAL) {
+                if(setFilter == SensorFilter.LOWPASS) {
+                    result = lowPassFilter(x, y, z)
+                }
+                else if(setFilter == SensorFilter.HIGHPASS) {
+                    result = highPassFilter(x, y, z)
+                }
+                else if(setFilter == SensorFilter.NORMALISIZE) {
+                    result = normalisizeRotation(x, y, z)
+                }
+
+                x = result[0]
+                y = result[1]
+                z = result[2]
+            }
 
             seismograph?.addData(x,y,z)
 
@@ -84,6 +107,47 @@ class SeismographActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun lowPassFilter(x: Float, y: Float, z: Float) : FloatArray {
+        val filteredValues = FloatArray(3)
+
+        //Value from 0 to 1
+        val ALPHA = 0.1f
+
+        filteredValues[0] = x * ALPHA + filteredValues[0] * (1.0f - ALPHA)
+        filteredValues[1] = y * ALPHA + filteredValues[1] * (1.0f - ALPHA)
+        filteredValues[2] = z * ALPHA + filteredValues[2] * (1.0f - ALPHA)
+
+        return filteredValues
+    }
+
+    private fun highPassFilter(x: Float, y: Float, z: Float) : FloatArray {
+        val filteredValues = FloatArray(3)
+        val gravity =  FloatArray(3)
+
+        //Value from 0 to 1
+        val ALPHA = 0.1f
+
+        gravity[0] = ALPHA * gravity[0] + (1 - ALPHA) * x;
+        gravity[1] = ALPHA * gravity[1] + (1 - ALPHA) * y;
+        gravity[2] = ALPHA * gravity[2] + (1 - ALPHA) * z;
+
+        filteredValues[0] = x - gravity[0];
+        filteredValues[1] = y - gravity[1];
+        filteredValues[2] = z - gravity[2];
+
+        return filteredValues;
+    }
+
+    private fun normalisizeRotation(axisX: Float, axisY: Float, axisZ: Float) : FloatArray {
+        val omegaMagnitude = sqrt((axisX * axisX + axisY * axisY + axisY * axisZ).toDouble())
+
+        axisX.div(omegaMagnitude.toFloat())
+        axisY.div(omegaMagnitude.toFloat())
+        axisZ.div(omegaMagnitude.toFloat())
+
+        return floatArrayOf(axisX, axisY, axisZ)
     }
 
     override fun onPause() {
