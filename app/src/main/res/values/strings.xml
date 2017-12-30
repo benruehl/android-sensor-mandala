@@ -3,4 +3,10 @@
 
     <!-- menu strings -->
     <string name="menu_seismo_calibrate">Kalibrieren</string>
+
+    <!-- filter names -->
+    <string name="filter_accelerometer_pass_all">Kein Filter</string>
+    <string name="filter_accelerometer_high_pass">Hochpassfilter</string>
+    <string name="filter_accelerometer_low_pass">Tiefpassfilter</string>
+    <string name="filter_accelerometer_normalize">Normalisierungsfilter</string>
 </resources>

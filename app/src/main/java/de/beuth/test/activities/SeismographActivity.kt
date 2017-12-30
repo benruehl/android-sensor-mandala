@@ -8,12 +8,17 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import com.github.mikephil.charting.charts.LineChart
 import de.beuth.test.R
 import de.beuth.test.sensors.Seismograph
 import de.beuth.test.sensors.SensorListener
 import de.beuth.test.utils.bind
 import android.widget.TextView
+import de.beuth.test.adapters.SensorFilterArrayAdapter
 import de.beuth.test.filters.*
 import de.beuth.test.sensors.AccelerometerDataPoint
 import java.lang.Math.sqrt
@@ -41,6 +46,8 @@ class SeismographActivity : AppCompatActivity() {
 
     private var currentAccelerometerFilter: SensorFilter<AccelerometerDataPoint> = availableAccelerometerFilters.first()
 
+    private val filterSelectionSpinner: Spinner by bind(R.id.filterSelectionSpinner)
+
     private val chartX : LineChart by bind(R.id._chartX)
     private val chartY : LineChart by bind(R.id._chartY)
     private val chartZ : LineChart by bind(R.id._chartZ)
@@ -59,6 +66,8 @@ class SeismographActivity : AppCompatActivity() {
         for (i in 1..seismograph!!.dataLimit) {
             seismograph!!.addData(0f, 0f, 0f)
         }
+
+        initFilterSelectionSpinner()
 
         sensorListener.onSensorChanged = { sensorEvent: SensorEvent -> onAccelerometerChanged(sensorEvent) }
         sensorListener.startListening()
@@ -92,6 +101,22 @@ class SeismographActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun initFilterSelectionSpinner() {
+        filterSelectionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                currentAccelerometerFilter = parent?.getItemAtPosition(position) as SensorFilter<AccelerometerDataPoint>
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+
+        val spinnerAdapter = SensorFilterArrayAdapter(this, android.R.layout.simple_spinner_item, availableAccelerometerFilters)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        filterSelectionSpinner.adapter = spinnerAdapter
     }
 
     override fun onPause() {

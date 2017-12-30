@@ -1,11 +1,17 @@
 package de.beuth.test.filters
 
+import android.content.Context
+import de.beuth.test.R
 import de.beuth.test.sensors.AccelerometerDataPoint
 
 /**
  * Created by Benjamin Rühl on 28.12.2017.
  */
 class AccelerometerLowPassFilter : SensorFilter<AccelerometerDataPoint> {
+
+    override fun getDisplayName(context: Context): String {
+        return context.getString(R.string.filter_accelerometer_low_pass)
+    }
 
     //Value from 0 to 1
     private val ALPHA = 0.1f

@@ -1,5 +1,7 @@
 package de.beuth.test.filters
 
+import android.content.Context
+import de.beuth.test.R
 import de.beuth.test.sensors.AccelerometerDataPoint
 
 /**
@@ -7,6 +9,10 @@ import de.beuth.test.sensors.AccelerometerDataPoint
  * Passes input directly to output.
  */
 class AccelerometerPassAllFilter : SensorFilter<AccelerometerDataPoint> {
+
+    override fun getDisplayName(context: Context): String {
+        return context.getString(R.string.filter_accelerometer_pass_all)
+    }
 
     override fun filter(dataPoint: AccelerometerDataPoint): AccelerometerDataPoint {
         return dataPoint;
