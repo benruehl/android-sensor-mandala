@@ -9,4 +9,5 @@
     <string name="filter_accelerometer_high_pass">Hochpassfilter</string>
     <string name="filter_accelerometer_low_pass">Tiefpassfilter</string>
     <string name="filter_accelerometer_normalize">Normalisierungsfilter</string>
+    <string name="filter_accelerometer_reduce_close_neighbors">Reduktionsfilter</string>
 </resources>

@@ -17,10 +17,11 @@ import de.beuth.test.R
  */
 class MandalaView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
 
-    private val surfaceCount: Int
     private val dataPoints: MutableList<MandalaDataPoint> = ArrayList()
-    private val maxDataPointCount: Int
     private val useMirroring = true
+
+    var surfaceCount: Int
+    var maxDataPointCount: Int
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_mandala, this, true)

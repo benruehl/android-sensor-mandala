@@ -10,7 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.github.mikephil.charting.charts.LineChart
 import de.beuth.test.R
@@ -21,7 +20,6 @@ import android.widget.TextView
 import de.beuth.test.adapters.SensorFilterArrayAdapter
 import de.beuth.test.filters.*
 import de.beuth.test.sensors.AccelerometerDataPoint
-import java.lang.Math.sqrt
 
 
 /**
@@ -46,7 +44,7 @@ class SeismographActivity : AppCompatActivity() {
 
     private var currentAccelerometerFilter: SensorFilter<AccelerometerDataPoint> = availableAccelerometerFilters.first()
 
-    private val filterSelectionSpinner: Spinner by bind(R.id.filterSelectionSpinner)
+    private val filterSelectionSpinner: Spinner by bind(R.id.seismographFilterSelectionSpinner)
 
     private val chartX : LineChart by bind(R.id._chartX)
     private val chartY : LineChart by bind(R.id._chartY)
@@ -75,14 +73,13 @@ class SeismographActivity : AppCompatActivity() {
 
     private fun onAccelerometerChanged(sensorEvent: SensorEvent) {
         if (sensorEvent.sensor.type == Sensor.TYPE_ACCELEROMETER) {
-            var sensorDataPoint = AccelerometerDataPoint(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2])
+            val sensorDataPoint = AccelerometerDataPoint(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2])
+            val filteredSensorDataPoint = currentAccelerometerFilter.filter(sensorDataPoint) ?: return
 
-            sensorDataPoint = currentAccelerometerFilter.filter(sensorDataPoint)
-
-            seismograph?.addData(sensorDataPoint.x, sensorDataPoint.y, sensorDataPoint.z)
+            seismograph?.addData(filteredSensorDataPoint.x, filteredSensorDataPoint.y, filteredSensorDataPoint.z)
 
             if (calibrate) {
-                seismograph?.setFixValues(sensorDataPoint.x, sensorDataPoint.y, sensorDataPoint.z)
+                seismograph?.setFixValues(filteredSensorDataPoint.x, filteredSensorDataPoint.y, filteredSensorDataPoint.z)
                 calibrate = false
             }
         }
