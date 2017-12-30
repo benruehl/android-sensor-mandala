@@ -15,7 +15,7 @@ import de.beuth.test.filters.*
 import de.beuth.test.sensors.AccelerometerDataPoint
 import de.beuth.test.sensors.SensorListener
 import de.beuth.test.utils.bind
-import de.beuth.test.views.MandalaColorizer
+import de.beuth.test.views.color.MandalaColorizer
 import de.beuth.test.views.MandalaDataPoint
 import de.beuth.test.views.MandalaView
 import de.beuth.test.views.color.BlackColorizer

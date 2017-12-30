@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import de.beuth.test.R
 import de.beuth.test.views.color.BlackColorizer
+import de.beuth.test.views.color.MandalaColorizer
 
 /**
  * Created by Benjamin Rühl on 03.11.2017.

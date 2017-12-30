@@ -3,7 +3,6 @@ package de.beuth.test.views.color
 import android.content.Context
 import android.graphics.Color
 import de.beuth.test.R
-import de.beuth.test.views.MandalaColorizer
 import de.beuth.test.views.MandalaDataPoint
 
 /**
