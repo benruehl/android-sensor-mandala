@@ -10,4 +10,10 @@
     <string name="filter_accelerometer_low_pass">Tiefpassfilter</string>
     <string name="filter_accelerometer_normalize">Normalisierungsfilter</string>
     <string name="filter_accelerometer_reduce_close_neighbors">Reduktionsfilter</string>
+
+    <!-- mandala colorizer names -->
+    <string name="mandala_colorizer_black">Schwarz</string>
+    <string name="mandala_colorizer_red">Rot</string>
+    <string name="mandala_colorizer_rainbow">Regenbogen</string>
+
 </resources>

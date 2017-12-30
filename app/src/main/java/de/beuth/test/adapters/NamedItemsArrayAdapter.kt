@@ -10,16 +10,20 @@ import de.beuth.test.filters.SensorFilter
 /**
  * Created by Benjamin Rühl on 30.12.2017.
  */
-class SensorFilterArrayAdapter(context: Context?, resource: Int, objects: List<SensorFilter<*>>?)
-    : ArrayAdapter<SensorFilter<*>>(context, resource, objects) {
+class NamedItemsArrayAdapter(context: Context?, resource: Int, objects: List<NamedAdaptee>?)
+    : ArrayAdapter<NamedItemsArrayAdapter.NamedAdaptee>(context, resource, objects) {
 
-    private var items: List<SensorFilter<*>> = objects ?: ArrayList()
+    interface NamedAdaptee {
+        fun getDisplayName(context: Context): String
+    }
+
+    private var items: List<NamedAdaptee> = objects ?: ArrayList()
 
     override fun getCount(): Int {
         return items.count()
     }
 
-    override fun getItem(position: Int): SensorFilter<*> {
+    override fun getItem(position: Int): NamedAdaptee {
         return items[position]
     }
 

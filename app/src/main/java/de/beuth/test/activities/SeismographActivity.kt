@@ -17,7 +17,7 @@ import de.beuth.test.sensors.Seismograph
 import de.beuth.test.sensors.SensorListener
 import de.beuth.test.utils.bind
 import android.widget.TextView
-import de.beuth.test.adapters.SensorFilterArrayAdapter
+import de.beuth.test.adapters.NamedItemsArrayAdapter
 import de.beuth.test.filters.*
 import de.beuth.test.sensors.AccelerometerDataPoint
 
@@ -111,7 +111,7 @@ class SeismographActivity : AppCompatActivity() {
             }
         }
 
-        val spinnerAdapter = SensorFilterArrayAdapter(this, android.R.layout.simple_spinner_item, availableAccelerometerFilters)
+        val spinnerAdapter = NamedItemsArrayAdapter(this, android.R.layout.simple_spinner_item, availableAccelerometerFilters)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         filterSelectionSpinner.adapter = spinnerAdapter
     }

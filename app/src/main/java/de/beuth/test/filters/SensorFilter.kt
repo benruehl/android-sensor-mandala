@@ -1,11 +1,10 @@
 package de.beuth.test.filters
 
-import android.content.Context
+import de.beuth.test.adapters.NamedItemsArrayAdapter
 
 /**
  * Created by Benjamin Rühl on 28.12.2017.
  */
-interface SensorFilter<T> {
+interface SensorFilter<T> : NamedItemsArrayAdapter.NamedAdaptee {
     fun filter(dataPoint: T): T?
-    fun getDisplayName(context: Context): String
 }

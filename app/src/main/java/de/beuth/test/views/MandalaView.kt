@@ -7,10 +7,9 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import de.beuth.test.R
+import de.beuth.test.views.color.BlackColorizer
 
 /**
  * Created by Benjamin Rühl on 03.11.2017.
@@ -18,10 +17,18 @@ import de.beuth.test.R
 class MandalaView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
 
     private val dataPoints: MutableList<MandalaDataPoint> = ArrayList()
+
     private val useMirroring = true
 
     var surfaceCount: Int
+
     var maxDataPointCount: Int
+
+    var colorizer: MandalaColorizer = BlackColorizer()
+        set(value) {
+            invalidate()
+            field = value
+        }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_mandala, this, true)
@@ -106,7 +113,7 @@ class MandalaView(context: Context, attrs: AttributeSet) : ConstraintLayout(cont
         val dataPointPaint = Paint()
         dataPointPaint.style = Paint.Style.STROKE
         dataPointPaint.strokeWidth = dataPoint.thickness.toFloat()
-        dataPointPaint.color = Color.BLACK
+        dataPointPaint.color = colorizer.getColor(dataPoint)
 
         return dataPointPaint
     }
