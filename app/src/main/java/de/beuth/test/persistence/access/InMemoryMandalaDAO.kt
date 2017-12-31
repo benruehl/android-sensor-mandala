@@ -14,6 +14,10 @@ class InMemoryMandalaDAO : MandalaDAO {
         return savedMandalas.map({ entry -> entry.value })
     }
 
+    override fun find(id: Long): Mandala? {
+        return savedMandalas[id]
+    }
+
     override fun save(mandala: Mandala): Mandala {
         if (mandala.id == 0L)
             mandala.id = getNextId()

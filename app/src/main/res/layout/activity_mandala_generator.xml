@@ -29,7 +29,7 @@
     </LinearLayout>
 
     <de.beuth.test.views.MandalaView
-        android:id="@+id/mandalaView"
+        android:id="@+id/mandalaGenerationView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"

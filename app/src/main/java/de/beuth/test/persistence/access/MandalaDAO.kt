@@ -7,5 +7,6 @@ import de.beuth.test.persistence.entities.Mandala
  */
 interface MandalaDAO {
     fun findAll(): List<Mandala>
+    fun find(id: Long): Mandala?
     fun save(mandala: Mandala): Mandala
 }

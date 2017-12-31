@@ -24,14 +24,14 @@ import de.beuth.test.views.MandalaView
 import de.beuth.test.views.color.BlackColorizer
 import de.beuth.test.views.color.RainbowColorizer
 import de.beuth.test.views.color.RedColorizer
-import kotlinx.android.synthetic.main.activity_mandala.*
+import kotlinx.android.synthetic.main.activity_mandala_generator.*
 
 /**
  * Created by Benjamin Rühl on 03.11.2017.
  */
-class MandalaActivity : AppCompatActivity() {
+class MandalaGeneratorActivity : AppCompatActivity() {
 
-    private val mandalaView: MandalaView by bind(R.id.mandalaView)
+    private val mandalaView: MandalaView by bind(R.id.mandalaGenerationView)
 
     private val availableAccelerometerFilters = listOf<SensorFilter<AccelerometerDataPoint>>(
             AccelerometerReduceCloseNeighborsFilter(1f),
@@ -62,7 +62,7 @@ class MandalaActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_mandala)
+        setContentView(R.layout.activity_mandala_generator)
 
         initFilterSelectionSpinner()
         initColorizerSelectionSpinner()

@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 
         mandala.setOnClickListener {
             val intent : Intent = Intent()
-            intent.setClass(this, MandalaActivity::class.java)
+            intent.setClass(this, MandalaGeneratorActivity::class.java)
             startActivity(intent)
         }
 

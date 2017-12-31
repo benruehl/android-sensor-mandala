@@ -24,10 +24,12 @@
         <activity android:name=".activities.SeismographActivity"
             android:screenOrientation="landscape"/>
 
-        <activity android:name=".activities.MandalaActivity"
+        <activity android:name=".activities.MandalaGeneratorActivity"
             android:screenOrientation="portrait"/>
 
         <activity android:name=".activities.MandalaGalleryActivity"/>
+
+        <activity android:name=".activities.MandalaViewActivity"/>
 
     </application>
 
