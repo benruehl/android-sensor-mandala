@@ -16,4 +16,7 @@
     <string name="mandala_colorizer_red">Rot</string>
     <string name="mandala_colorizer_rainbow">Regenbogen</string>
 
+    <!-- mandala gallery -->
+    <string name="mandala_gallery_is_empty">Die Gallerie ist derzeit noch leer</string>
+
 </resources>
