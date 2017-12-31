@@ -3,7 +3,7 @@ package de.beuth.test.views.color
 import android.content.Context
 import android.graphics.Color
 import de.beuth.test.R
-import de.beuth.test.views.MandalaDataPoint
+import de.beuth.test.persistence.entities.MandalaDataPoint
 
 /**
  * Created by Benjamin Rühl on 30.12.2017.

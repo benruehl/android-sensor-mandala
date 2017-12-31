@@ -8,15 +8,18 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.Spinner
 import de.beuth.test.R
 import de.beuth.test.adapters.NamedItemsArrayAdapter
 import de.beuth.test.filters.*
+import de.beuth.test.persistence.access.DAOFactoryService
+import de.beuth.test.persistence.entities.Mandala
 import de.beuth.test.sensors.AccelerometerDataPoint
 import de.beuth.test.sensors.SensorListener
 import de.beuth.test.utils.bind
 import de.beuth.test.views.color.MandalaColorizer
-import de.beuth.test.views.MandalaDataPoint
+import de.beuth.test.persistence.entities.MandalaDataPoint
 import de.beuth.test.views.MandalaView
 import de.beuth.test.views.color.BlackColorizer
 import de.beuth.test.views.color.RainbowColorizer
@@ -51,6 +54,8 @@ class MandalaActivity : AppCompatActivity() {
 
     private val colorizerSelectionSpinner: Spinner by bind(R.id.mandalaColorizerSelectionSpinner)
 
+    private val mandalaTakeSnapshotButton: Button by bind(R.id.mandalaTakeSnapshotButton)
+
     private val sensorListener: SensorListener by lazy {
         SensorListener(getSystemService(Context.SENSOR_SERVICE) as SensorManager, Sensor.TYPE_ACCELEROMETER)
     }
@@ -64,6 +69,8 @@ class MandalaActivity : AppCompatActivity() {
 
         sensorListener.onSensorChanged = { sensorEvent: SensorEvent -> onAccelerometerChanged(sensorEvent) }
         sensorListener.startListening()
+
+        mandalaTakeSnapshotButton.setOnClickListener { createMandalaSnapshot() }
 
 //      generateDataPoints()
     }
@@ -85,7 +92,7 @@ class MandalaActivity : AppCompatActivity() {
 
     private fun generateDataPoints() {
         for (i in 0..100) {
-            var dataPoint = MandalaDataPoint(i/100.0, i/100.0, i.toDouble())
+            var dataPoint = MandalaDataPoint(i / 100.0, i / 100.0, i.toDouble())
             mandalaView.addDataPoint(dataPoint)
         }
     }
@@ -129,5 +136,14 @@ class MandalaActivity : AppCompatActivity() {
         val spinnerAdapter = NamedItemsArrayAdapter(this, android.R.layout.simple_spinner_item, availableMandalaColorizers)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         mandalaColorizerSelectionSpinner.adapter = spinnerAdapter
+    }
+
+    private fun createMandalaSnapshot() {
+        var mandalaSnapshot = Mandala()
+        mandalaSnapshot.surfaceCount = mandalaView.surfaceCount
+        mandalaSnapshot.dataPoints = mandalaView.dataPointsReadOnly
+        mandalaSnapshot.colorizerClassFullName = mandalaView.colorizer.javaClass.name
+
+        DAOFactoryService.daoFactory.getMandalaDAO().save(mandalaSnapshot)
     }
 }

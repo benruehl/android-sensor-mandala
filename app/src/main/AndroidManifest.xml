@@ -27,6 +27,8 @@
         <activity android:name=".activities.MandalaActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".activities.MandalaGalleryActivity"/>
+
     </application>
 
 </manifest>

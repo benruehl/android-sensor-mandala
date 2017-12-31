@@ -9,15 +9,19 @@ import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import de.beuth.test.R
+import de.beuth.test.persistence.entities.MandalaDataPoint
 import de.beuth.test.views.color.BlackColorizer
 import de.beuth.test.views.color.MandalaColorizer
 
 /**
  * Created by Benjamin Rühl on 03.11.2017.
  */
-class MandalaView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
+class MandalaView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
 
     private val dataPoints: MutableList<MandalaDataPoint> = ArrayList()
+
+    val dataPointsReadOnly: List<MandalaDataPoint>
+        get() = dataPoints.toList()
 
     private val useMirroring = true
 
@@ -33,14 +37,20 @@ class MandalaView(context: Context, attrs: AttributeSet) : ConstraintLayout(cont
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_mandala, this, true)
-        val a = getCustomViewAttributes(attrs)
 
-        try {
-            surfaceCount = a.getInteger(R.styleable.MandalaView_surfaceCount, 2)
-            maxDataPointCount = 8192 / surfaceCount
-        } finally {
-            a.recycle()
+        if (attrs != null) {
+            val a = getCustomViewAttributes(attrs)
+
+            try {
+                surfaceCount = a.getInteger(R.styleable.MandalaView_surfaceCount, 2)
+            } finally {
+                a.recycle()
+            }
+        } else {
+            surfaceCount = 2
         }
+
+        maxDataPointCount = 8192 / surfaceCount
     }
 
     private fun getCustomViewAttributes(attrs: AttributeSet): TypedArray {
@@ -121,6 +131,12 @@ class MandalaView(context: Context, attrs: AttributeSet) : ConstraintLayout(cont
 
     fun addDataPoint(mandalaDataPoint: MandalaDataPoint) {
         dataPoints.add(mandalaDataPoint)
+        ensureMaxDataPointCount()
+        invalidate()
+    }
+
+    fun addDataPoints(mandalaDataPoints: Iterable<MandalaDataPoint>) {
+        dataPoints.addAll(mandalaDataPoints)
         ensureMaxDataPointCount()
         invalidate()
     }
