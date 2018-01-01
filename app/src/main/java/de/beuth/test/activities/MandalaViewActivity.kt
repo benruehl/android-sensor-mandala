@@ -14,13 +14,17 @@ import de.beuth.test.views.color.MandalaColorizer
  */
 class MandalaViewActivity : AppCompatActivity() {
 
+    companion object {
+        val INTENT_KEY_MANDALA_ID: String = "de.beuth.test.persistence.entities.Mandala.id"
+    }
+
     private val mandalaView: MandalaView by bind(R.id.mandalaView)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mandala_view)
 
-        val mandalaId: Long = intent.getLongExtra(MandalaGalleryActivity.INTENT_KEY_MANDALA_ID, 0)
+        val mandalaId: Long = intent.getLongExtra(INTENT_KEY_MANDALA_ID, 0)
         initMandalaView(mandalaId)
     }
 

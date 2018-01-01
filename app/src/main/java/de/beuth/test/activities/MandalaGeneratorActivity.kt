@@ -35,7 +35,7 @@ class MandalaGeneratorActivity : AppCompatActivity() {
 
     private val availableAccelerometerFilters = listOf<SensorFilter<AccelerometerDataPoint>>(
             AccelerometerReduceCloseNeighborsFilter(1f),
-            AccelerometerReduceCloseNeighborsFilter(10f),
+            AccelerometerReduceCloseNeighborsFilter(5f),
             AccelerometerHighPassFilter(),
             AccelerometerLowPassFilter(),
             AccelerometerNormalizeFilter(),
@@ -116,8 +116,10 @@ class MandalaGeneratorActivity : AppCompatActivity() {
     }
 
     private fun updateMaxDataPointCountForCurrentFilter() {
-        if (currentAccelerometerFilter is AccelerometerReduceCloseNeighborsFilter)
-            mandalaView.maxDataPointCount = 1024 / mandalaView.surfaceCount
+        if (currentAccelerometerFilter is AccelerometerReduceCloseNeighborsFilter) {
+            val dataPointCountToDistanceRelation = 1 + 0.2 * (currentAccelerometerFilter as AccelerometerReduceCloseNeighborsFilter).minNeighborDistance
+            mandalaView.maxDataPointCount = (1024 / mandalaView.surfaceCount / dataPointCountToDistanceRelation).toInt()
+        }
         else
             mandalaView.maxDataPointCount = 8192 / mandalaView.surfaceCount
     }

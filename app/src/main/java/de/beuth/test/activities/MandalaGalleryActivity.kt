@@ -20,10 +20,6 @@ import de.beuth.test.utils.bind
  */
 class MandalaGalleryActivity : AppCompatActivity() {
 
-    companion object {
-        val INTENT_KEY_MANDALA_ID: String = "de.beuth.test.persistence.entities.Mandala.id"
-    }
-
     private val galleryGrid: GridView by bind(R.id.mandalaGalleryGrid)
 
     private val galleryEmptyPlaceholder: View by bind(R.id.mandalaGalleryEmptyPlaceholder)
@@ -46,7 +42,7 @@ class MandalaGalleryActivity : AppCompatActivity() {
             val intent = Intent()
             intent.setClass(this, MandalaViewActivity::class.java)
             intent.action = ACTION_SEND
-            intent.putExtra(INTENT_KEY_MANDALA_ID, selectedMandala.id)
+            intent.putExtra(MandalaViewActivity.INTENT_KEY_MANDALA_ID, selectedMandala.id)
             startActivity(intent)
         }
     }
