@@ -1,5 +1,6 @@
 package de.beuth.test.persistence.entities
 
+import com.google.gson.annotations.SerializedName
 import java.util.*
 
 /**
@@ -7,9 +8,9 @@ import java.util.*
  */
 class Mandala {
 
-    var id: Long = 0
-    var surfaceCount: Int = 0
-    var dataPoints: List<MandalaDataPoint> = ArrayList()
-    var colorizerClassFullName: String = ""
-    var creationDate: Date = Calendar.getInstance().time
+    @SerializedName("id") var id: Long = 0
+    @SerializedName("surfaceCount") var surfaceCount: Int = 0
+    @SerializedName("data") var dataPoints: List<MandalaDataPoint> = ArrayList()
+    @SerializedName("colorizer") var colorizerClassFullName: String = ""
+    @SerializedName("date") var creationDate: Date = Calendar.getInstance().time
 }

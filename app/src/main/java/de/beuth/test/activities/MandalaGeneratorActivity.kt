@@ -15,7 +15,7 @@ import de.beuth.test.adapters.NamedItemsArrayAdapter
 import de.beuth.test.filters.*
 import de.beuth.test.persistence.access.DAOFactoryService
 import de.beuth.test.persistence.entities.Mandala
-import de.beuth.test.sensors.AccelerometerDataPoint
+import de.beuth.test.persistence.entities.AccelerometerDataPoint
 import de.beuth.test.sensors.SensorListener
 import de.beuth.test.utils.bind
 import de.beuth.test.views.color.MandalaColorizer
@@ -146,6 +146,6 @@ class MandalaGeneratorActivity : AppCompatActivity() {
         mandalaSnapshot.dataPoints = mandalaView.dataPointsReadOnly
         mandalaSnapshot.colorizerClassFullName = mandalaView.colorizer.javaClass.name
 
-        DAOFactoryService.daoFactory.getMandalaDAO().save(mandalaSnapshot)
+        DAOFactoryService.daoFactory.getMandalaDAO().save(this, mandalaSnapshot)
     }
 }

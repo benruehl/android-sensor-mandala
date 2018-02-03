@@ -29,7 +29,7 @@ class MandalaViewActivity : AppCompatActivity() {
     }
 
     private fun initMandalaView(mandalaId: Long) {
-        val mandalaById = DAOFactoryService.daoFactory.getMandalaDAO().find(mandalaId) ?: return
+        val mandalaById = DAOFactoryService.daoFactory.getMandalaDAO().find(this, mandalaId) ?: return
 
         mandalaView.surfaceCount = mandalaById.surfaceCount
         mandalaView.maxDataPointCount = Int.MAX_VALUE

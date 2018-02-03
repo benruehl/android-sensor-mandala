@@ -33,7 +33,7 @@ class MandalaGalleryActivity : AppCompatActivity() {
     }
 
     private fun initGalleryGrid() {
-        val persistedMandalas = DAOFactoryService.daoFactory.getMandalaDAO().findAll().sortedByDescending { m -> m.creationDate }
+        val persistedMandalas = DAOFactoryService.daoFactory.getMandalaDAO().findAll(this).sortedByDescending { m -> m.creationDate }
 
         galleryGrid.adapter = MandalaGalleryGridAdapter(this, android.R.layout.simple_gallery_item, persistedMandalas)
         galleryGrid.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
@@ -48,7 +48,7 @@ class MandalaGalleryActivity : AppCompatActivity() {
     }
 
     private fun initEmptyGalleryPlaceholder() {
-        if (DAOFactoryService.daoFactory.getMandalaDAO().findAll().isNotEmpty())
+        if (DAOFactoryService.daoFactory.getMandalaDAO().findAll(this).isNotEmpty())
             galleryEmptyPlaceholder.visibility = GONE
     }
 }

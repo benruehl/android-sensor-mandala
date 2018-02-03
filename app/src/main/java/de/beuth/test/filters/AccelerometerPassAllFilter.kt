@@ -2,7 +2,7 @@ package de.beuth.test.filters
 
 import android.content.Context
 import de.beuth.test.R
-import de.beuth.test.sensors.AccelerometerDataPoint
+import de.beuth.test.persistence.entities.AccelerometerDataPoint
 
 /**
  * Created by Benjamin Rühl on 28.12.2017.

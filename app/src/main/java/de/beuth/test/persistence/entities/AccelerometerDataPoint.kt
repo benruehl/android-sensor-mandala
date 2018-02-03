@@ -1,4 +1,4 @@
-package de.beuth.test.sensors
+package de.beuth.test.persistence.entities
 
 /**
  * Created by Benjamin Rühl on 28.12.2017.

@@ -6,7 +6,7 @@ package de.beuth.test.persistence.access
 class DAOFactoryService {
 
     companion object {
-        var daoFactory: DAOFactory = InMemoryDAOFactory()
+        var daoFactory: DAOFactory = SharedPrefsDAOFactory()
             private set
     }
 }

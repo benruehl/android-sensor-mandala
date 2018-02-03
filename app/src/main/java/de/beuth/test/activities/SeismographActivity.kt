@@ -19,7 +19,7 @@ import de.beuth.test.utils.bind
 import android.widget.TextView
 import de.beuth.test.adapters.NamedItemsArrayAdapter
 import de.beuth.test.filters.*
-import de.beuth.test.sensors.AccelerometerDataPoint
+import de.beuth.test.persistence.entities.AccelerometerDataPoint
 
 
 /**
