@@ -9,20 +9,24 @@ import de.beuth.test.persistence.entities.AccelerometerDataPoint
  */
 class AccelerometerLowPassFilter : SensorFilter<AccelerometerDataPoint> {
 
+    private var lastDataPoint: AccelerometerDataPoint? = null
+
     override fun getDisplayName(context: Context): String {
         return context.getString(R.string.filter_accelerometer_low_pass)
     }
 
     //Value from 0 to 1
-    private val ALPHA = 0.1f
+    private val ALPHA = 0.5f
 
-    override fun filter(dataPoint: AccelerometerDataPoint): AccelerometerDataPoint {
-        val filteredValues = FloatArray(3)
+    override fun filter(dataPoint: AccelerometerDataPoint): AccelerometerDataPoint? {
+        if (lastDataPoint == null) {
+            return dataPoint;
+        }
 
-        filteredValues[0] = dataPoint.x * ALPHA + filteredValues[0] * (1.0f - ALPHA)
-        filteredValues[1] = dataPoint.y * ALPHA + filteredValues[1] * (1.0f - ALPHA)
-        filteredValues[2] = dataPoint.z * ALPHA + filteredValues[2] * (1.0f - ALPHA)
+        val diffX = lastDataPoint!!.x + ALPHA * (dataPoint.x - lastDataPoint!!.x);
+        val diffY = lastDataPoint!!.y + ALPHA * (dataPoint.x - lastDataPoint!!.y);
+        val diffZ = lastDataPoint!!.z + ALPHA * (dataPoint.x - lastDataPoint!!.z);
 
-        return AccelerometerDataPoint(filteredValues[0], filteredValues[1], filteredValues[2])
+        return AccelerometerDataPoint(diffX, diffY, diffZ)
     }
 }
