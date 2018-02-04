@@ -6,5 +6,5 @@ package de.beuth.test.persistence.entities
 
 class MandalaSnapshot {
     var mandala: Mandala = Mandala();
-    var data: List<AccelerometerDataPoint> =
+    //var data: List<AccelerometerDataPoint> =
 }
